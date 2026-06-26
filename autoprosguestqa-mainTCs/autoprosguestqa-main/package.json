@@ -1,0 +1,27 @@
+{
+  "name": "vs-code-projects",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:auth": "playwright test auth.spec.js",
+    "test:tier1": "playwright test auth.spec.js rbac.spec.js permit-actions.api.spec.js permit-intake.spec.js smoke.spec.js",
+    "test:tier2": "playwright test pm-portal.spec.js public-routes.spec.js emails.spec.js",
+    "test:tier3": "playwright test permits-page.spec.js properties.spec.js permit-actions.ui.spec.js permit-expiry-sweeper.spec.js",
+    "report": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@supabase/supabase-js": "^2.38.0",
+    "@types/node": "^25.6.0",
+    "dotenv": "^16.3.1"
+  }
+}

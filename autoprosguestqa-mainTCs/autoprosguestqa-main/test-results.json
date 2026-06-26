@@ -1,0 +1,168 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\playwright.config.js",
+    "rootDir": "C:/Users/psull/Future_Edge_Dev/AutoPros/autoprosguestqa-mainTCs/autoprosguestqa-main/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/psull/Future_Edge_Dev/AutoPros/autoprosguestqa-mainTCs/autoprosguestqa-main/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/psull/Future_Edge_Dev/AutoPros/autoprosguestqa-mainTCs/autoprosguestqa-main/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "all",
+    "updateSourceMethod": "3way",
+    "version": "1.60.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "backup-export.spec.js",
+      "file": "backup-export.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "BX1: export action downloads a file with expected MIME type",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Export button not found — feature may not be implemented yet",
+                  "location": {
+                    "file": "C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\tests\\backup-export.spec.js",
+                    "line": 38,
+                    "column": 10
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3925,
+                  "error": {
+                    "message": "Error: page.waitForEvent: Target page, context or browser has been closed\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+                    "stack": "Error: page.waitForEvent: Target page, context or browser has been closed\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n    at C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\tests\\backup-export.spec.js:28:32",
+                    "location": {
+                      "file": "C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\tests\\backup-export.spec.js",
+                      "column": 32,
+                      "line": 28
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 26 |\u001b[39m\n \u001b[90m 27 |\u001b[39m   \u001b[90m// Watch for the download event BEFORE clicking the export button\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 28 |\u001b[39m   \u001b[36mconst\u001b[39m downloadPromise \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mwaitForEvent(\u001b[32m'download'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m15\u001b[39m_000 })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 29 |\u001b[39m\n \u001b[90m 30 |\u001b[39m   \u001b[90m// Locate the export button — adjust selector to match your actual UI\u001b[39m\n \u001b[90m 31 |\u001b[39m   \u001b[36mconst\u001b[39m exportBtn \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\tests\\backup-export.spec.js",
+                        "column": 32,
+                        "line": 28
+                      },
+                      "message": "Error: page.waitForEvent: Target page, context or browser has been closed\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n\n\u001b[0m \u001b[90m 26 |\u001b[39m\n \u001b[90m 27 |\u001b[39m   \u001b[90m// Watch for the download event BEFORE clicking the export button\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 28 |\u001b[39m   \u001b[36mconst\u001b[39m downloadPromise \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mwaitForEvent(\u001b[32m'download'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m15\u001b[39m_000 })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 29 |\u001b[39m\n \u001b[90m 30 |\u001b[39m   \u001b[90m// Locate the export button — adjust selector to match your actual UI\u001b[39m\n \u001b[90m 31 |\u001b[39m   \u001b[36mconst\u001b[39m exportBtn \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[0m\n\u001b[2m    at C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\tests\\backup-export.spec.js:28:32\u001b[22m"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-26T02:09:50.745Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Export button not found — feature may not be implemented yet",
+                      "location": {
+                        "file": "C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\tests\\backup-export.spec.js",
+                        "line": 38,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\test-results\\backup-export-BX1-export-a-f00cd-ile-with-expected-MIME-type-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\test-results\\backup-export-BX1-export-a-f00cd-ile-with-expected-MIME-type-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\psull\\Future_Edge_Dev\\AutoPros\\autoprosguestqa-mainTCs\\autoprosguestqa-main\\tests\\backup-export.spec.js",
+                    "column": 32,
+                    "line": 28
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0c87f87ed047e290c496-2af297e5dd7c8ca12f38",
+          "file": "backup-export.spec.js",
+          "line": 22,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-06-26T02:09:49.554Z",
+    "duration": 5591.198000000324,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
