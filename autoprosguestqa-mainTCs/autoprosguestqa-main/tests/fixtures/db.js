@@ -58,12 +58,15 @@ export async function createTestPermit(permitData) {
   
   const permit = {
     plate: permitData.plate || 'TEST123',
-    property_id: permitData.property_id || process.env.TEST_PROPERTY_ID,
+    // CHANGE THIS LINE:
+    property_code: permitData.property_code || process.env.TEST_property_code, 
     status: permitData.status || 'active',
     expires_at: permitData.expires_at || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     created_at: permitData.created_at || new Date().toISOString(),
-    ...permitData
-  };
+    // Remove property_code from the spread if it gets passed in accidentally
+    ...permitData,
+    property_code: undefined 
+  };  
   
   const { data, error } = await supabase
     .from('permits')

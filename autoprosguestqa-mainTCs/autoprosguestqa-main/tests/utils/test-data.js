@@ -15,7 +15,7 @@ export function buildPermit(overrides = {}) {
   return {
     id: overrides.id || `permit-${Date.now()}`,
     plate: overrides.plate || 'TEST123',
-    property_id: overrides.property_id || process.env.TEST_PROPERTY_ID || 'prop-test',
+    property_code: overrides.property_code || process.env.TEST_property_code || 'prop-test',
     status: overrides.status || 'active',
     decision: overrides.decision || null,
     decision_reason: overrides.decision_reason || null,
@@ -132,7 +132,7 @@ export function buildPermitActionPayload(action, overrides = {}) {
         vehicle_make: overrides.vehicle_make || 'Tesla',
         vehicle_model: overrides.vehicle_model || 'Model 3',
         vehicle_color: overrides.vehicle_color || 'White',
-        property_id: overrides.property_id || process.env.TEST_PROPERTY_ID || 'prop-test',
+        property_code: overrides.property_code || process.env.TEST_property_code || 'prop-test',
         notes: overrides.notes || 'Manual tow entry',
         tow_timestamp: overrides.tow_timestamp || now.toISOString(),
         ...overrides
@@ -162,7 +162,7 @@ export function buildPermitSubmission(overrides = {}) {
     vehicle_make: overrides.vehicle_make || 'Tesla',
     vehicle_model: overrides.vehicle_model || 'Model 3',
     vehicle_color: overrides.vehicle_color || 'White',
-    property_id: overrides.property_id || process.env.TEST_PROPERTY_ID || 'prop-test',
+    property_code: overrides.property_code || process.env.TEST_property_code || 'prop-test',
     guest_name: overrides.guest_name || null,
     guest_email: overrides.guest_email || null,
     photo_url: overrides.photo_url || null,
@@ -178,7 +178,7 @@ export function buildPermitSubmission(overrides = {}) {
  */
 export function buildResidentRegistration(overrides = {}) {
   return {
-    property_id: overrides.property_id || process.env.TEST_PROPERTY_ID || 'prop-test',
+    property_code: overrides.property_code || process.env.TEST_property_code || 'prop-test',
     name: overrides.name || 'Resident Name',
     email: overrides.email || `resident${Date.now()}@example.com`,
     phone: overrides.phone || '555-0200',
@@ -197,7 +197,7 @@ export function buildGuestPass(overrides = {}) {
   expiresAt.setDate(expiresAt.getDate() + (overrides.days || 1));
   
   return {
-    property_id: overrides.property_id || process.env.TEST_PROPERTY_ID || 'prop-test',
+    property_code: overrides.property_code || process.env.TEST_property_code || 'prop-test',
     guest_name: overrides.guest_name || 'Guest Name',
     guest_email: overrides.guest_email || `guest${Date.now()}@example.com`,
     guest_phone: overrides.guest_phone || '555-0300',
@@ -227,7 +227,7 @@ export function buildGHLWebhookPayload(overrides = {}) {
     vehicle_make: overrides.vehicle_make || 'Tesla',
     vehicle_model: overrides.vehicle_model || 'Model 3',
     vehicle_color: overrides.vehicle_color || 'White',
-    property_id: overrides.property_id || process.env.TEST_PROPERTY_ID || 'prop-test',
+    property_code: overrides.property_code || process.env.TEST_property_code || 'prop-test',
     photo_url: overrides.photo_url || null,
     timestamp: overrides.timestamp || new Date().toISOString(),
     ...overrides
