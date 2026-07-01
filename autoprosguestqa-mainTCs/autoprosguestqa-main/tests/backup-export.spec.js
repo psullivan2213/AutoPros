@@ -12,6 +12,8 @@ import { createTestPermit, cleanupTestData } from './fixtures/db.js';
 const APP_URL      = process.env.APP_URL;
 const DOWNLOAD_DIR = path.join(process.cwd(), 'test-downloads');
 
+const getFileExtension = (filename = '') => path.extname(filename).slice(1).toLowerCase();
+
 // Ensure download directory exists
 if (!fs.existsSync(DOWNLOAD_DIR)) fs.mkdirSync(DOWNLOAD_DIR, { recursive: true });
 
@@ -20,24 +22,31 @@ if (!fs.existsSync(DOWNLOAD_DIR)) fs.mkdirSync(DOWNLOAD_DIR, { recursive: true }
 // Covers: admin triggers export → browser receives a file
 // ------------------------------------------------------------
 test('BX1: export action downloads a file with expected MIME type', async ({ page }) => {
+  // 1. Authenticate programmatically and let it settle on the root homepage
   await login(page, process.env.TEST_ADMIN_EMAIL, process.env.TEST_ADMIN_PASSWORD);
-  await page.goto(`${APP_URL}/permits`);
-  await page.waitForLoadState('networkidle');
+  
+  // 2. Pause briefly to allow application scripts to register the Supabase token state
+  await page.waitForTimeout(500);
 
-  // Watch for the download event BEFORE clicking the export button
-  const downloadPromise = page.waitForEvent('download', { timeout: 15_000 });
+  // 3. Navigate cleanly to the permits page now that the session is active
+  await page.goto(`${APP_URL}/permits`, { waitUntil: 'load' });
+  await page.waitForLoadState('networkidle');
 
   // Locate the export button — adjust selector to match your actual UI
   const exportBtn = page.locator(
     'button:has-text("Export"), button:has-text("Download"), [data-testid="export-btn"]'
   );
 
-  // If the export button doesn't exist yet, skip gracefully
-  const btnExists = await exportBtn.count();
-  if (btnExists === 0) {
-    test.skip(true, 'Export button not found — feature may not be implemented yet');
+  // Auto-wait for the element to arrive instead of doing an instant count check
+  try {
+    await exportBtn.first().waitFor({ state: 'visible', timeout: 10_000 });
+  } catch (error) {
+    test.skip(true, 'Export button not found or page took too long to load — feature may not be implemented yet');
     return;
   }
+
+  // Watch for the download event BEFORE clicking the export button
+  const downloadPromise = page.waitForEvent('download', { timeout: 15_000 });
 
   await exportBtn.first().click();
 
@@ -47,12 +56,12 @@ test('BX1: export action downloads a file with expected MIME type', async ({ pag
   const filename = download.suggestedFilename();
   expect(filename, 'Download has no suggested filename').toBeTruthy();
 
-  // 2. MIME type should be CSV or JSON (Excel also acceptable)
-  const mimeType = download.suggestedFilename().split('.').pop()?.toLowerCase();
+  // 2. Export file extension should be CSV, JSON, or Excel
+  const extension = getFileExtension(filename);
   expect(
     ['csv', 'json', 'xlsx', 'xls'],
-    `Unexpected export file extension: ${mimeType}`
-  ).toContain(mimeType);
+    `Unexpected export file extension: ${extension}`
+  ).toContain(extension);
 
   // 3. Save to disk for inspection in BX2/BX3
   const savePath = path.join(DOWNLOAD_DIR, filename);
@@ -89,31 +98,42 @@ test('BX2: exported file contains required fields and seeded permit data', async
       property_id: process.env.TEST_PROPERTY_ID,
     });
 
+    // 1. Authenticate programmatically and let it settle on the root homepage
     await login(page, process.env.TEST_ADMIN_EMAIL, process.env.TEST_ADMIN_PASSWORD);
-    await page.goto(`${APP_URL}/permits`);
-    await page.waitForLoadState('networkidle');
+    
+    // 2. Pause briefly to allow application scripts to register the Supabase token state
+    await page.waitForTimeout(500);
 
-    const downloadPromise = page.waitForEvent('download', { timeout: 15_000 });
+    // 3. Navigate cleanly to the permits page now that the session is active
+    await page.goto(`${APP_URL}/permits`, { waitUntil: 'load' });
+    await page.waitForLoadState('networkidle');
 
     const exportBtn = page.locator(
       'button:has-text("Export"), button:has-text("Download"), [data-testid="export-btn"]'
     );
-    if ((await exportBtn.count()) === 0) {
-      test.skip(true, 'Export button not found');
+
+    // Auto-wait for the element to arrive instead of doing an instant count check
+    try {
+      await exportBtn.first().waitFor({ state: 'visible', timeout: 10_000 });
+    } catch (error) {
+      test.skip(true, 'Export button not found or page took too long to load.');
       return;
     }
+
+    const downloadPromise = page.waitForEvent('download', { timeout: 15_000 });
 
     await exportBtn.first().click();
     const download = await downloadPromise;
 
     const filename = download.suggestedFilename();
+    const extension = getFileExtension(filename);
     const savePath = path.join(DOWNLOAD_DIR, `bx2-${filename}`);
     await download.saveAs(savePath);
 
     const content = fs.readFileSync(savePath, 'utf-8');
 
     // --- CSV validation ---
-    if (filename.endsWith('.csv')) {
+    if (extension === 'csv') {
       const lines = content.split('\n').filter((line) => line.trim().length > 0);
       const firstLine = lines[0]?.toLowerCase() ?? '';
       for (const col of REQUIRED_CSV_HEADERS) {
@@ -124,7 +144,7 @@ test('BX2: exported file contains required fields and seeded permit data', async
     }
 
     // --- JSON validation ---
-    if (filename.endsWith('.json')) {
+    if (extension === 'json') {
       const parsed = JSON.parse(content);
       const records = Array.isArray(parsed) ? parsed : parsed.data ?? parsed.permits ?? [];
       expect(records.length, 'Export contains no records').toBeGreaterThan(0);
@@ -162,25 +182,35 @@ test('BX3: PM export is scoped to assigned properties only', async ({ page }) =>
   });
 
   try {
+    // 1. Authenticate programmatically and let it settle on the root homepage
     await login(page, process.env.TEST_PM_EMAIL, process.env.TEST_PM_PASSWORD);
-    await page.goto(`${APP_URL}/pm`);
-    await page.waitForLoadState('networkidle');
+    
+    // 2. Pause briefly to allow application scripts to register the Supabase token state
+    await page.waitForTimeout(500);
 
-    const downloadPromise = page.waitForEvent('download', { timeout: 15_000 });
+    // 3. Navigate cleanly to the PM portal route now that the session is active
+    await page.goto(`${APP_URL}/pm`, { waitUntil: 'load' });
+    await page.waitForLoadState('networkidle');
 
     const exportBtn = page.locator(
       'button:has-text("Export"), button:has-text("Download"), [data-testid="export-btn"]'
     );
 
-    if ((await exportBtn.count()) === 0) {
-      test.skip(true, 'Export button not found on PM portal');
+    // Auto-wait for the element to arrive instead of doing an instant count check
+    try {
+      await exportBtn.first().waitFor({ state: 'visible', timeout: 10_000 });
+    } catch (error) {
+      test.skip(true, 'Export button not found on PM portal or page took too long to load.');
       return;
     }
+
+    const downloadPromise = page.waitForEvent('download', { timeout: 15_000 });
 
     await exportBtn.first().click();
     const download = await downloadPromise;
 
     const filename = download.suggestedFilename();
+    const extension = getFileExtension(filename);
     const savePath = path.join(DOWNLOAD_DIR, `bx3-${filename}`);
     await download.saveAs(savePath);
 
@@ -192,7 +222,7 @@ test('BX3: PM export is scoped to assigned properties only', async ({ page }) =>
       'PM export contains data from an unassigned property (data leak!)'
     ).not.toContain('OTHER_PROPERTY_NOT_ASSIGNED_TO_PM');
 
-    if (filename.endsWith('.json')) {
+    if (extension === 'json') {
       const records = JSON.parse(content);
       const leaked  = records.filter
         ? records.filter((r) => r.property_id === 'OTHER_PROPERTY_NOT_ASSIGNED_TO_PM')
@@ -207,4 +237,3 @@ test('BX3: PM export is scoped to assigned properties only', async ({ page }) =>
     }
   }
 });
-
